@@ -51,7 +51,7 @@
             "ativo": true
         },
         {
-            "name": "gelson",
+            "name": "victor",
             "host": "192.168.0.108",
             "port": 1521,
             "user": "NEXUS",
@@ -69,6 +69,16 @@
             "schema": "",
             "sid": "",
             "ativo": false
+        },
+        {
+            "name": "ggggg",
+            "host": "",
+            "port": 0,
+            "user": "",
+            "pass": "",
+            "schema": "",
+            "sid": "",
+            "ativo": false
         }
     ],
     "bots": [
@@ -76,7 +86,8 @@
             "name": "SrvNissanServiceBook",
             "ativo": true,
             "dbs": [
-                "db1",
+                "db3",
+                "db4",
                 "gelson"
             ]
         },
@@ -102,7 +113,8 @@
                 "ativo": true
             },
             "dbs": [
-                "db1"
+                "db1",
+                "db4"
             ],
             "ativo": true
         }
@@ -115,6 +127,6 @@
         }
     ],
     "path": "sss4",
-    "logNivel":4,
-    "logScreen":true
+    "lognivel": 2,
+    "logscreen": true
 }

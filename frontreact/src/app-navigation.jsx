@@ -11,16 +11,17 @@
                         {
                                 text: 'Config',
                                 path: '/CONFIG',
-                        },
-                        {
-                                text: 'Grupo de Empresas',
-                                path: '/EMPRESAS',
-                        },
-                        {
-                                text: 'Usuario x Grupo',
-                                path: '/CLI00001',
-                        },
+                        }
                 ]
         },
-];
-
+        {
+                text: 'Movimento',
+                icon: 'columnproperties',
+                items: [
+                        {
+                                text: 'Movimento',
+                                path: '/MOVIMENTO',
+                        }
+                ]
+        },
+]

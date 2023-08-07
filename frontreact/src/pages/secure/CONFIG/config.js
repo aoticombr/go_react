@@ -23,9 +23,8 @@ import {
   NumericRule
 } from 'devextreme-react/form';
 import { Button } from 'devextreme-react/button';
-import {
-  List
-} from 'devextreme-react/list';
+import { Lookup, DropDownOptions } from 'devextreme-react/lookup';
+import DataSource from 'devextreme/data/data_source';
 
 
 const Class_Crud = () => {
@@ -37,14 +36,15 @@ const Class_Crud = () => {
   const [isLoading, setLoading]  = useState(true);
   const [itens, setItens] = useState({});
   //
-  
-                                                             
-  
-
+  const niveis =['Nenhum','Debug','Info','Warining','Error','Critial/Fatal']                                    
+  const getNivelIndex = (nivel) => {
+    const index = niveis.indexOf(nivel);
+    return index === -1 ? 'Nível não encontrado' : index;
+  }
   async function getDados() {
     try {
       const api = baseApi(baseURLS.API_ADMIN)
-      api.get('/config')
+      api.get('/json')
         .then(res => {
           setLoading(false);
           setData(res.data);
@@ -73,7 +73,7 @@ const Class_Crud = () => {
 
   const onSubmit = data => {
     const api = baseApi(baseURLS.API_ADMIN)
-      api.post('/config', data)
+      api.post('/json', data)
         .then(
           (res) => {
             console.log(res)
@@ -216,6 +216,27 @@ const Class_Crud = () => {
           />
       )
     }
+    const setNivel = (e) => {
+      console.log(" e value:",e.value)
+      data.lognivel = getNivelIndex(e.value)
+      setData(data)
+  }
+  const simpleLookupLabel = { 'aria-label': 'Simple lookup' };
+    const renderLookup= (comp) => {
+      console.log("renderLookup",comp)
+      console.log("value:",data.lognivel)
+      return (
+        <Lookup
+        items={niveis}
+        //grouped={true}
+        //value={data.lognivel}
+        defaultValue={niveis[data.lognivel]}
+       //  displayExpr="Subject"
+         onValueChanged={setNivel}
+        inputAttr={simpleLookupLabel}
+      />
+      );
+  }
     return (
       <>
         <PageContent>
@@ -230,7 +251,7 @@ const Class_Crud = () => {
                 variant={('primary')} 
                       onClick={() => onSubmit(data)}
                   />
-                <Link className='btn btn-success float-right' to={'/gio'}>Voltar</Link>
+                <Link className='btn btn-success float-right' to={'/'}>Voltar</Link>
             </Col>
           </Row>  
           {error && renderError()}
@@ -242,9 +263,12 @@ const Class_Crud = () => {
                 
                   <Form        formData={data}  colSpan={1}   >                  
                     <SimpleItem dataField="path" />
-                    <SimpleItem dataField="lognivel" >
-                      <NumericRule />
-                    </SimpleItem>
+                    <SimpleItem 
+                      dataField="lognivel" 
+                      editorType="dxLookup" 
+                      render={renderLookup}
+                      />
+                   
                     <SimpleItem dataField="logscreen" editorType="dxCheckBox" />
                   </Form>
                     <DataGrid id="dataGrid" dataSource={data.dbs}>                 

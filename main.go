@@ -139,8 +139,8 @@ func main() {
 		handlers.AllowedOrigins([]string{"*"}))
 
 	fs := http.FileServer(http.Dir("./frontreact/build"))
-	router.HandleFunc("/config", getConfig).Methods("GET")
-	router.HandleFunc("/config", updateConfig).Methods("POST")
+	router.HandleFunc("/json", getConfig).Methods("GET")
+	router.HandleFunc("/json", updateConfig).Methods("POST")
 	router.HandleFunc("/signin", signin).Methods("GET")
 	router.PathPrefix("/").Handler(http.StripPrefix("/", fs))
 
