@@ -1,0 +1,120 @@
+{
+    "dbs": [
+        {
+            "name": "db1",
+            "host": "100.0.65.224",
+            "port": 1521,
+            "user": "NBSAMA",
+            "pass": "new",
+            "schema": "NBSAMA",
+            "sid": "FAB",
+            "ativo": true
+        },
+        {
+            "name": "db2",
+            "host": "100.0.65.224",
+            "port": 1521,
+            "user": "TAVE3",
+            "pass": "new",
+            "schema": "TAVE3",
+            "sid": "FAB",
+            "ativo": true
+        },
+        {
+            "name": "db3",
+            "host": "100.0.65.48",
+            "port": 1521,
+            "user": "BMW",
+            "pass": "new",
+            "schema": "BMW",
+            "sid": "BMW",
+            "ativo": true
+        },
+        {
+            "name": "db4",
+            "host": "192.168.0.108",
+            "port": 1521,
+            "user": "NEXUS",
+            "pass": "b0b5371e1a0c24a3f08dedbbffb9df",
+            "schema": "NEXUS",
+            "sid": "XE",
+            "ativo": true
+        },
+        {
+            "name": "db5",
+            "host": "192.168.0.108",
+            "port": 1521,
+            "user": "NEXUS",
+            "pass": "b0b5371e1a0c24a3f08dedbbffb9df",
+            "schema": "NEXUS",
+            "sid": "XE",
+            "ativo": true
+        },
+        {
+            "name": "gelson",
+            "host": "192.168.0.108",
+            "port": 1521,
+            "user": "NEXUS",
+            "pass": "b0b5371e1a0c24a3f08dedbbffb9df",
+            "schema": "NEXUS",
+            "sid": "XE",
+            "ativo": true
+        },
+        {
+            "name": "vvv",
+            "host": "",
+            "port": 0,
+            "user": "",
+            "pass": "",
+            "schema": "",
+            "sid": "",
+            "ativo": false
+        }
+    ],
+    "bots": [
+        {
+            "name": "SrvNissanServiceBook",
+            "ativo": true,
+            "dbs": [
+                "db1",
+                "gelson"
+            ]
+        },
+        {
+            "name": "SrvNbsBmwCRG",
+            "ativo": true,
+            "dbs": [
+                "db3",
+                "db1"
+            ]
+        }
+    ],
+    "apis": [
+        {
+            "name": "paulo",
+            "protocolo": "http",
+            "host": "localhost",
+            "port": 2997,
+            "gateway": {
+                "protocolo": "http",
+                "host": "100.0.67.188",
+                "port": 2997,
+                "ativo": true
+            },
+            "dbs": [
+                "db1"
+            ],
+            "ativo": true
+        }
+    ],
+    "user": [
+        {
+            "name": "admin",
+            "pass": "eb0a191797624dd3a48fa681d3061212",
+            "ativo": true
+        }
+    ],
+    "path": "sss4",
+    "logNivel":4,
+    "logScreen":true
+}
