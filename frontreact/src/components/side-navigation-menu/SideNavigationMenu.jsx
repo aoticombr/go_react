@@ -16,7 +16,6 @@ export default function SideNavigationMenu(props) {
     selectedItemChanged,
     openMenu,
     compactMode,
-    onMenuReady
   } = props;
   
   const { isLarge } = useScreenSize();
@@ -31,10 +30,7 @@ export default function SideNavigationMenu(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const [currentPath, setCurrentPath] = useState('');
- // const { navigationData: { currentPath } } = useNavigation();
-  const navigationData = useNavigation();
-
+  const [currentPath] = useState('');
   const treeViewRef = useRef(null);
   const wrapperRef = useRef();
   const getWrapperRef = useCallback((element) => {

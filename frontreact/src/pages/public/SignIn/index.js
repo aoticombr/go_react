@@ -3,7 +3,7 @@ import {
   Button, Form, Container, Row, Col, Alert
 } from 'react-bootstrap';
 import {BoxForm, BoxContent} from '../../../shared/styles';
-import {Link,withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import Logo from '../../../assets/logo.png';
 import AdminService from '../../../services/ws_login';
 import {login} from '../../../services/auth';

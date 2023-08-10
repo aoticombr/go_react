@@ -29,8 +29,7 @@ export default function UserPanel({ menuMode }) {
       icon: 'runner',
      onClick: handLogout
     }
-  ]), [//signOut
-  ]);
+  ]), []);
   return (
     <div className={'user-panel'}>
       <div className={'user-info'}>

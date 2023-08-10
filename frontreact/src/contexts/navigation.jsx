@@ -18,10 +18,9 @@ function NavigationProvider(props) {
 function withNavigationWatcher(Component, path) {
   const WrappedComponent = function (props) {
     const { setNavigationData } = useNavigation();
-
     useEffect(() => {
       setNavigationData({ currentPath: path });
-    }, [path, setNavigationData]);
+    }, [path,setNavigationData]);
 
     return <Component {...props} />;
   }

@@ -1,4 +1,4 @@
-﻿export const navigation = [
+export const navigation = [
         {
                 text: 'Home',
                 path: '/',

@@ -1,12 +1,8 @@
 ﻿import React from "react";
 import "./Cards.css";
-
-
 import Card from "../Card/Card";
 
 const Cards = (props) => {
-  //console.log('ddddddddd');
-  //console.log(props.title);
   return (
     <div className="Cards">
       {props.data.map((card, id) => {

@@ -6,8 +6,6 @@ import {Header, Logo} from './styles';
 import {logout} from '../../services/auth';
 import img from '../../assets/icone.png';
 import { Meta } from '../meta';
-import {DtaToTextBr, DtaToTextEn2} from '../../lib/utils.date';
-import md5 from 'md5';
 
 function MainMenu({history}) {
   async function handLogout() {

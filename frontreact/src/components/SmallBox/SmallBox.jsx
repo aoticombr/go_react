@@ -1,21 +1,11 @@
-﻿import React, { useState } from "react";
+﻿import React from "react";
 import "./SmallBox.css";
-
-
 import img from "../../imgs/svg/bag.svg";
-
-
-
-import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { motion, AnimateSharedLayout } from "framer-motion";
-import { UilTimes } from "@iconscout/react-unicons";
-import Chart from "react-apexcharts";
-
+import {  AnimateSharedLayout } from "framer-motion";
 // parent Card
 
 const SmallBox = (props) => {
-  const [expanded, setExpanded] = useState(false);
   return (
     <AnimateSharedLayout>
       <div class="col-lg-3 col-6">

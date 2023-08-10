@@ -1,15 +1,15 @@
-﻿import React, {useState, useEffect}  from 'react';
+﻿import React, {useState}  from 'react';
 
 import "./EditSearchBox.css";
 import Form from 'react-bootstrap/Form';
-import {Container,  Row, Table, Col,Alert, Button, Modal  } from 'react-bootstrap';
+import {  Row, Table, Col,Alert, Button, Modal  } from 'react-bootstrap';
 //import {Container,Button,Table, Row, Col, Alert} from 'react-bootstrap';
 
 const EditSearchBox = (props) => {
     const [showSearch, setshowSearch] = useState(false);
     const [limit, setLimit]   = useState('50');
     const [pesq, setPesq]   = useState('');
-    const [isLoading, setIsLoading]   = useState(false);
+    const [isLoading]   = useState(false);
     const [_dados, set_Dados]   = useState([]);
     //
    // const [id, setID]       = useState(props?.valueID);
@@ -81,15 +81,7 @@ const EditSearchBox = (props) => {
               </Table>
           )
     }
-    //==============================
-    function RenderEmptyRow(){
-          return (
-              
-              <Alert variant="danger">
-              Nenhum Dado Encontrado.
-            </Alert>
-          )
-    }
+   
 
   return (
     <div className="EditSearchBox">

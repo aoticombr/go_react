@@ -9,7 +9,6 @@ import { useHistory } from 'react-router';
 import { useMenuPatch } from '../utils/patches';
 import ScrollView from 'devextreme-react/scroll-view';
 
-
 const MenuStatus = {
     Closed: 1,
     Opened: 2,
@@ -20,8 +19,7 @@ const RouterMenu = ({ title, children }) => {
   const scrollViewRef = useRef(null);
   const navigate = useHistory(); 
   const { isXSmall, isLarge } = useScreenSize();
- // const [childList, setChildList] = useState(React.Children.toArray(children));
-  const [patchCssClass, onMenuReady] = useMenuPatch();
+  const [patchCssClass] = useMenuPatch();
   const [menuStatus, setMenuStatus] = useState(isLarge ? MenuStatus.Opened : MenuStatus.Closed);
 
 
@@ -66,14 +64,6 @@ const RouterMenu = ({ title, children }) => {
      event?.stopPropagation();
    }
   }, [navigate, menuStatus, isLarge]);
-
-  // const removeChild = (index) => {
-  //   if (childList[index]) { // Verifica se o n� filho ainda pertence ao n� pai
-  //     const newChildList = [...childList];
-  //     newChildList.splice(index, 1);
-  //     setChildList(newChildList);
-  //   }
-  // };
 
 
   return (

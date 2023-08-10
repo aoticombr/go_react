@@ -1,41 +1,23 @@
-import React, {useState, useEffect, useCallback }  from 'react';
+import React, {useState, useEffect }  from 'react';
 import { PageContent } from '../../../shared/styles';
-import {Container,  Row, Table, Col,Alert,  Modal  } from 'react-bootstrap';
-import {Link, useParams, useHistory} from 'react-router-dom';
-
+import {Container,  Row,  Col,Alert  } from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import baseApi from "../../../services/api";
 import {getCurrentURL} from "../../../configs/baseURLS";
-import { DropDownButton } from 'devextreme-react/drop-down-button';
-import {
-  DataGrid,
-  MasterDetail,
-  Column,
-  FormItem,
-  Label,
-  // ...
-  RequiredRule,
-  Editing
-} from 'devextreme-react/data-grid';
-import { TagBox } from 'devextreme-react/tag-box';
-import {
-  Form,
-  SimpleItem,
-  NumericRule
-} from 'devextreme-react/form';
-import { Button } from 'devextreme-react/button';
-import { Lookup, DropDownOptions } from 'devextreme-react/lookup';
-import DataSource from 'devextreme/data/data_source';
+import {DataGrid, Column,  FormItem,  Editing} from 'devextreme-react/data-grid';
+import {TagBox} from 'devextreme-react/tag-box';
+import {Form, SimpleItem} from 'devextreme-react/form';
+import {Button} from 'devextreme-react/button';
+import {Lookup} from 'devextreme-react/lookup';
 
 
 
 const Class_Crud = () => {
-  const _tabela = 'gio';
-  const history = useHistory(); //chamado do hook
   //
   const [data, setData] = useState({});
   const [error, setError]         = useState('');
   const [isLoading, setLoading]   = useState(true);
-  const [itens, setItens]         = useState({});
+  const [itens]         = useState({});
 
   const niveis =['Nenhum','Debug','Info','Warining','Error','Critial/Fatal']     
   const simpleLookupLabel = { 'aria-label': 'Simple lookup' };      
@@ -45,7 +27,7 @@ const Class_Crud = () => {
     return index === -1 ? 'Nível não encontrado' : index;
   }
 
-  async function getDados() {
+  async function ObtemDados() {
     try {
       const api = baseApi(getCurrentURL())
       api.get('/json')
@@ -79,69 +61,34 @@ const Class_Crud = () => {
         .then(
           (res) => {
             console.log(res)
-            getDados()
+            ObtemDados()
           }
         )
         .catch(err => console.error(err));
                                                                                                         
   }
 
-  const getDBNames = (data) => {
-    // Ensure `data` is defined and has a `dbs` property.
-    if (!data || !Array.isArray(data.dbs)) {
-      console.error('Invalid data passed to getDBNames');
-      return [];
-    }
-    
-    return data.dbs.map(db => db.name);
-  };  
+   
 
   useEffect(() => { 
-        getDados();
+    async function fetchDados() {
+        ObtemDados();
+    }
+    fetchDados();    
   }, []);
 
-  useEffect(() => {
-    setItens(getDBNames(data));
-    console.log("useEffect data itens:",itens);
-  }, [data.dbs]);   
+  
 
   function onEditorPreparingbots(e) {
       console.log("DataField",e.dataField,"parentType",e.parentType)
-      if(e.dataField == "dbs" && e.parentType === "dataRow") {
-          // const defaultValueChangeHandler = e.editorOptions.onValueChanged;
-           e.editorName = "dxTagBox"; // Change the editor's type
-        
-          // e.editorOptions.onValueChanged = function (args) {  // Override the default handler
-          //     // ...
-          //     // Custom commands go here
-          //     // ...
-          //     // If you want to modify the editor value, call the setValue function:
-          //     // e.setValue(newValue);
-          //     // Otherwise, call the default handler:
-          //     defaultValueChangeHandler(args);
-          // }
+      if(e.dataField === "dbs" && e.parentType === "dataRow") {
+           e.editorName = "dxTagBox"; 
       }
   }
 
-  function onEditorPreparingApi(e) {
-      console.log("DataField",e.dataField,"parentType",e.parentType)
-      if(e.dataField == "gateway" && e.parentType === "dataRow") {
-          // const defaultValueChangeHandler = e.editorOptions.onValueChanged;
-           e.editorName = "dxForm"; // Change the editor's type
-        
-          // e.editorOptions.onValueChanged = function (args) {  // Override the default handler
-          //     // ...
-          //     // Custom commands go here
-          //     // ...
-          //     // If you want to modify the editor value, call the setValue function:
-          //     // e.setValue(newValue);
-          //     // Otherwise, call the default handler:
-          //     defaultValueChangeHandler(args);
-          // }
-      }
-  }
+  
 
-    function renderDBS(cellInfo) {
+  function renderDBS(cellInfo) {
       const setEditedValue = ((e)=>{
         console.log("setEditedValue",e.value)
         cellInfo.setValue(e.value);
@@ -156,16 +103,16 @@ const Class_Crud = () => {
               onValueChanged={setEditedValue}
           />
       )
-    }
-    function renderGATWAY(cellInfo) {
+  }
+  function renderGATWAY(cellInfo) {
       return (
           <Form
           formData={cellInfo.value}
           colCount={1}
           />
       )
-    }
-    const setNivel = (e) => {
+  }
+  const setNivel = (e) => {
       console.log(" e value:",e.value)
       data.lognivel = getNivelIndex(e.value)
       setData(data)

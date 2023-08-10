@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useCallback }  from 'react';
+import React, {useState, useEffect }  from 'react';
 import { PageContent } from '../../../shared/styles';
-import {Container,  Row, Table, Col,Alert,  Modal  } from 'react-bootstrap';
-import {Link, useHistory} from 'react-router-dom';
+import {Container,  Row,  Col,Alert,  Modal  } from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 
 import baseApi from "../../../services/api";
 import {getCurrentURL} from "../../../configs/baseURLS";
@@ -11,21 +11,8 @@ import { Button } from 'devextreme-react/button';
 import { TextArea } from 'devextreme-react/text-area';
 import {
   DataGrid,
-  ColumnChooser,
-  ColumnFixing,
   Column,
-  RequiredRule,
-  FilterRow,
-  SearchPanel,
-  GroupPanel,
-  Selection,
-  Summary,
-  GroupItem,
   Editing,
-  Grouping,
-  Toolbar,
-  Item,
-  MasterDetail,
   Export
 } from 'devextreme-react/data-grid';
 import { exportDataGrid } from 'devextreme/excel_exporter';
@@ -39,7 +26,6 @@ import { DropDownButton } from 'devextreme-react/drop-down-button';
 
 const Class_Crud = () => {
 
-  const history = useHistory(); //chamado do hook
   //
   const [botnames, setBotnames] = useState({});
   const [botname, setBotname] = useState(null);
@@ -49,8 +35,6 @@ const Class_Crud = () => {
 
   const [error, setError]        = useState('');
   const [isLoading, setLoading]  = useState(true);
-  const [itens, setItens] = useState({});
-
   const [mov, setMov] = useState([]);
   const [det, setDet] = useState([]);
 
@@ -63,10 +47,10 @@ const Class_Crud = () => {
   
   const simpleLookupLabel = { 'aria-label': 'Simple lookup' };
 
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate]     = useState(new Date(new Date().setDate(new Date().getDate() + 7)));
-  const [minDate, setMinDate]     = useState(new Date(new Date().setDate(new Date().getDate() - 14)));
-  const [maxDate, setMaxDate]     = useState(new Date(new Date().setDate(new Date().getDate() + 14)));
+  const [startDate] = useState(new Date());
+  const [endDate]     = useState(new Date(new Date().setDate(new Date().getDate() + 7)));
+  const [minDate]     = useState(new Date(new Date().setDate(new Date().getDate() - 14)));
+  const [maxDate]     = useState(new Date(new Date().setDate(new Date().getDate() + 14)));
 
   const [dtini, setDtIni] = useState(new Date(minDate));
   const [dtfim, setDtFim] = useState(new Date(maxDate));
@@ -99,7 +83,7 @@ const Class_Crud = () => {
    };                                                                     
            
   }
-  async function getbotdbs(botname) {
+  async function getbotdbs() {
     console.log("getbotdbs:",botname)
     try {
       if (botname!==undefined && botname!=={} && botname!==null) {
@@ -263,12 +247,10 @@ const Class_Crud = () => {
   }
   useEffect(() => { 
     getbotnames();
-    //setBotdb({})
   }, []);
 
   useEffect(() => { 
-    console.log("useEffect botname:", botname)
-    getbotdbs(botname);
+    getbotdbs();
     setBotdb(null)
   }, [botname]);
 
