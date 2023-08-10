@@ -1,2 +1,5 @@
 frontreact/node_modules
+frontreact/build
 node_modules
+pkged.go
+GO_REACT.exe
