@@ -1,0 +1,2 @@
+cd frontreact
+yarn build

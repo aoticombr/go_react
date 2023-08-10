@@ -1,9 +1,9 @@
 import baseApi from "./api";
-import baseURLS from "../configs/baseURLS";
+import {getCurrentURL} from "../configs/baseURLS";
 
 export default class AdminService {
     constructor(){
-        this.api = baseApi(baseURLS.API_ADMIN)
+        this.api = baseApi(getCurrentURL() )
     }
    
 async login(user, pass) {

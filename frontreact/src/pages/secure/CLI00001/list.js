@@ -269,7 +269,7 @@ useEffect( () => {
             <Location              row={2}              col={0}              colspan={3}              screen="lg"            ></Location>
             <Location              row={3}              col={0}              colspan={2}              screen="sm"            ></Location>
             <div className="footer item">
-              <p>AOTI Sistema Integrados</p>
+              <p>NBS Sistema Integrados</p>
             </div>
           </Item>
         </ResponsiveBox>

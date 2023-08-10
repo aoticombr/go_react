@@ -16,6 +16,7 @@ import RoutePrivateUser from './route-user';
 
 
 export default function Routes () {
+  console.log('window.location.href:',window.location)
   return (
      <Router>
        <Switch>

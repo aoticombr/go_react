@@ -68,7 +68,7 @@ const RouterMenu = ({ title, children }) => {
   }, [navigate, menuStatus, isLarge]);
 
   // const removeChild = (index) => {
-  //   if (childList[index]) { // Verifica se o nó filho ainda pertence ao nó pai
+  //   if (childList[index]) { // Verifica se o nï¿½ filho ainda pertence ao nï¿½ pai
   //     const newChildList = [...childList];
   //     newChildList.splice(index, 1);
   //     setChildList(newChildList);
@@ -82,7 +82,7 @@ const RouterMenu = ({ title, children }) => {
     <Header  
       menuToggleEnabled//={isXSmall}  
       toggleMenu={toggleMenu}   
-      title={'AOTI'}
+      title={'NBS'}
     />
     <div className={'side-nav-inner-toolbar'}>
     <Drawer

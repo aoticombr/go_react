@@ -1,4 +1,4 @@
-﻿import baseApi from "../../../services/api";
+import baseApi from "../../../services/api";
 import {
     getListaGenerico, 
     getCargaGenerico, 
@@ -10,13 +10,13 @@ import {
     getOutrosGetBody,
     getRowGenerico,
 } from '../../../services/crud';
-import baseURLS from "../../../configs/baseURLS";
+import {getCurrentURL} from "../../../configs/baseURLS";
 import {v4 as uuid } from 'uuid';
 
 
 class Class_WS_gio {
     constructor(){
-        this.api = baseApi(baseURLS.API_ADMIN)
+        this.api = baseApi(getCurrentURL() )
         this.tabela = 'gio';
     }
     //Lista os Dados

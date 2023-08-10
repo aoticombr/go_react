@@ -1,10 +1,10 @@
-﻿import React, {useState, useEffect, useCallback }  from 'react';
+import React, {useState, useEffect, useCallback }  from 'react';
 import { PageContent } from '../../../shared/styles';
 import {Container,  Row, Table, Col,Alert,  Modal  } from 'react-bootstrap';
 import {Link, useParams, useHistory} from 'react-router-dom';
 
 import baseApi from "../../../services/api";
-import baseURLS from "../../../configs/baseURLS";
+import {getCurrentURL} from "../../../configs/baseURLS";
 import { DropDownButton } from 'devextreme-react/drop-down-button';
 import {
   DataGrid,
@@ -27,23 +27,27 @@ import { Lookup, DropDownOptions } from 'devextreme-react/lookup';
 import DataSource from 'devextreme/data/data_source';
 
 
+
 const Class_Crud = () => {
   const _tabela = 'gio';
   const history = useHistory(); //chamado do hook
   //
   const [data, setData] = useState({});
-  const [error, setError]        = useState('');
-  const [isLoading, setLoading]  = useState(true);
-  const [itens, setItens] = useState({});
-  //
-  const niveis =['Nenhum','Debug','Info','Warining','Error','Critial/Fatal']                                    
+  const [error, setError]         = useState('');
+  const [isLoading, setLoading]   = useState(true);
+  const [itens, setItens]         = useState({});
+
+  const niveis =['Nenhum','Debug','Info','Warining','Error','Critial/Fatal']     
+  const simpleLookupLabel = { 'aria-label': 'Simple lookup' };      
+
   const getNivelIndex = (nivel) => {
     const index = niveis.indexOf(nivel);
     return index === -1 ? 'Nível não encontrado' : index;
   }
+
   async function getDados() {
     try {
-      const api = baseApi(baseURLS.API_ADMIN)
+      const api = baseApi(getCurrentURL())
       api.get('/json')
         .then(res => {
           setLoading(false);
@@ -61,9 +65,7 @@ const Class_Crud = () => {
            
   }
 
-  function renderError (){
-   
-  
+  function renderError (){  
     return (
       <Alert variant="danger">
         {error}
@@ -72,7 +74,7 @@ const Class_Crud = () => {
   }
 
   const onSubmit = data => {
-    const api = baseApi(baseURLS.API_ADMIN)
+    const api = baseApi(getCurrentURL() )
       api.post('/json', data)
         .then(
           (res) => {
@@ -81,46 +83,9 @@ const Class_Crud = () => {
           }
         )
         .catch(err => console.error(err));
-    // try {  
-    //   event.preventDefault();
-    //        if ((metodo === 'insert') & (1===2)){ 
-    // } else if ((metodo === 'insert') & (CheckNumberNull(id))) { setError(`Informe todos os campos para adicionar o gio insert[id]`);
-    // } else if ((metodo === 'insert') & (CheckNumberNull(id_db))) { setError(`Informe todos os campos para adicionar o gio insert[id_db]`);
-    // } else if ((metodo === 'insert') & (!dt_inc)) { setError(`Informe todos os campos para adicionar o gio insert[dt_inc]`);
-    // } else if ((metodo === 'insert') & (!dt_alt)) { setError(`Informe todos os campos para adicionar o gio insert[dt_alt]`);
-    // } else if ((metodo === 'insert') & (CheckNumberNull(user_inc))) { setError(`Informe todos os campos para adicionar o gio insert[user_inc]`);
-    // } else if ((metodo === 'insert') & (CheckNumberNull(user_alt))) { setError(`Informe todos os campos para adicionar o gio insert[user_alt]`);
-    // } else if ((metodo === 'insert') & (!descricao)) { setError(`Informe todos os campos para adicionar o gio insert[descricao]`);
-    // } else if ((metodo === 'edit') & (CheckNumberNull(id))) { setError(`Informe todos os campos para adicionar o gio insert[id]`);
-    // } else if ((metodo === 'edit') & (CheckNumberNull(id_db))) { setError(`Informe todos os campos para adicionar o gio insert[id_db]`);
-    // } else if ((metodo === 'edit') & (!dt_inc)) { setError(`Informe todos os campos para adicionar o gio insert[dt_inc]`);
-    // } else if ((metodo === 'edit') & (!dt_alt)) { setError(`Informe todos os campos para adicionar o gio insert[dt_alt]`);
-    // } else if ((metodo === 'edit') & (CheckNumberNull(user_inc))) { setError(`Informe todos os campos para adicionar o gio insert[user_inc]`);
-    // } else if ((metodo === 'edit') & (CheckNumberNull(user_alt))) { setError(`Informe todos os campos para adicionar o gio insert[user_alt]`);
-    // } else if ((metodo === 'edit') & (!descricao)) { setError(`Informe todos os campos para adicionar o gio insert[descricao]`);
-    // } else {                                                                                                   
-    //    if (metodo === 'edit') {                                                                          
-    //      let ok = await (new Class_WS_gio()).getUpdate(id,{id_db,dt_inc,dt_alt,user_inc,user_alt,descricao,row_status: "old"});    
-    //    //  window.close();//                                                                            
-    //        history.push('/'+_tabela);                                                                         
-    //    } else if (metodo === 'insert') {                                                                      
-    //      let ok = await (new Class_WS_gio()).getInsert({id,id_db,dt_inc,dt_alt,user_inc,user_alt,descricao});    
-    //     // window.close();//                                                                       
-    //        history.push('/'+_tabela);                                                                         
-    //    } else if (metodo === 'delete') {                                                                      
-    //      let ok = await (new Class_WS_gio()).getDelete(id);                
-    //     // window.close();//                                                                             
-    //        history.push('/'+_tabela);                                                                          
-    //    }                                                                                                      
-    //   }                                                                                                      
-    // }catch(erro){                                                                                           
-    //   if (error.message) {                                                                                  
-    //     setError(error.message);                                                                            
-    //   } else {                                                                                              
-    //     setError("Ocorreu um erro durante a criação do gio. ");                                     
-    //   }                                                                                                     
-    // };                                                                                                      
+                                                                                                        
   }
+
   const getDBNames = (data) => {
     // Ensure `data` is defined and has a `dbs` property.
     if (!data || !Array.isArray(data.dbs)) {
@@ -131,23 +96,16 @@ const Class_Crud = () => {
     return data.dbs.map(db => db.name);
   };  
 
-   useEffect(() => { 
+  useEffect(() => { 
         getDados();
-   }, []);
+  }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     setItens(getDBNames(data));
     console.log("useEffect data itens:",itens);
-   }, [data.dbs]);
+  }, [data.dbs]);   
 
-   
-   
-  //totalizador vem deseabilitado ative somente se precisar                                                                                                               
-  // useEffect(() => {                                                                                             
-  //    set_row_now(_row_now=>({..._row_now, total:((Number(_row_now.qtde)*Number(_row_now.valor)).toFixed(2))})); 
-  //  }, [_row_now.qtde, _row_now.valor]);                                                                         
-
-    function onEditorPreparingbots(e) {
+  function onEditorPreparingbots(e) {
       console.log("DataField",e.dataField,"parentType",e.parentType)
       if(e.dataField == "dbs" && e.parentType === "dataRow") {
           // const defaultValueChangeHandler = e.editorOptions.onValueChanged;
@@ -163,8 +121,9 @@ const Class_Crud = () => {
           //     defaultValueChangeHandler(args);
           // }
       }
-    }
-    function onEditorPreparingApi(e) {
+  }
+
+  function onEditorPreparingApi(e) {
       console.log("DataField",e.dataField,"parentType",e.parentType)
       if(e.dataField == "gateway" && e.parentType === "dataRow") {
           // const defaultValueChangeHandler = e.editorOptions.onValueChanged;
@@ -180,7 +139,7 @@ const Class_Crud = () => {
           //     defaultValueChangeHandler(args);
           // }
       }
-    }
+  }
 
     function renderDBS(cellInfo) {
       const setEditedValue = ((e)=>{
@@ -199,20 +158,10 @@ const Class_Crud = () => {
       )
     }
     function renderGATWAY(cellInfo) {
-      // const setEditedValue = ((e)=>{
-      //   console.log("setEditedValue",e.value)
-      //   cellInfo.setValue(e.value);
-      // })
-      console.log("cellInfo",cellInfo)
-
       return (
           <Form
           formData={cellInfo.value}
           colCount={1}
-          
-           //   value={cellInfo.value}
-           //   defaultValue={cellInfo.value}
-           //   onValueChanged={setEditedValue}
           />
       )
     }
@@ -221,8 +170,10 @@ const Class_Crud = () => {
       data.lognivel = getNivelIndex(e.value)
       setData(data)
   }
-  const simpleLookupLabel = { 'aria-label': 'Simple lookup' };
-    const renderLookup= (comp) => {
+
+    
+
+  const renderLookup= (comp) => {
       console.log("renderLookup",comp)
       console.log("value:",data.lognivel)
       return (
@@ -271,7 +222,12 @@ const Class_Crud = () => {
                    
                     <SimpleItem dataField="logscreen" editorType="dxCheckBox" />
                   </Form>
-                    <DataGrid id="dataGrid" dataSource={data.dbs}>                 
+                  
+                    <DataGrid id="dataGrid" dataSource={data.dbs} allowColumnResizing={true}
+                columnAutoWidth={true}
+                allowColumnReordering={true}
+                width={1000}
+                height={200}>                 
                       <Editing
                             mode="popup"
                             allowUpdating={true}
@@ -282,6 +238,11 @@ const Class_Crud = () => {
                     <DataGrid 
                        id="dataGrid" 
                        dataSource={data.bots}
+                       allowColumnResizing={true}
+                columnAutoWidth={true}
+                allowColumnReordering={true}
+                width={1000}
+                height={200}
                        onEditorPreparing={onEditorPreparingbots}
                       >  
                       <Column
@@ -302,7 +263,13 @@ const Class_Crud = () => {
                       />
                        <FormItem colSpan={1}/>
                     </DataGrid>
-                    <DataGrid id="dataGrid" dataSource={data.apis}>
+                    <DataGrid id="dataGrid" 
+                    dataSource={data.apis}
+                    allowColumnResizing={true}
+                    columnAutoWidth={true}
+                    allowColumnReordering={true}
+                    width={1000}
+                    height={200}>
                     <Column
                           dataField="name"
                       />
