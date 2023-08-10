@@ -104,7 +104,7 @@ func updateConfig(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 func signin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("signin")
+	//fmt.Println("signin")
 	file, _ := os.ReadFile("config.json")
 	var config Config
 	_ = json.Unmarshal(file, &config)
@@ -213,7 +213,7 @@ func getMovList(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Missing db dtfim", http.StatusBadRequest)
 		return
 	}
-	fmt.Println(dtini_iso, dtfim_iso)
+	//fmt.Println(dtini_iso, dtfim_iso)
 	dtini_time, err := time.Parse(time.RFC3339Nano, dtini_iso)
 	if err != nil {
 		fmt.Println("Erro na conversão:", err)
@@ -224,7 +224,7 @@ func getMovList(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Erro na conversão:", err)
 		return
 	}
-	fmt.Println(dtini_time, dtfim_time)
+	//fmt.Println(dtini_time, dtfim_time)
 	file, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -457,7 +457,7 @@ func getMovDet(w http.ResponseWriter, r *http.Request) {
 		Add(") t  ").
 		Add("order by t.id desc, t.id_mov_det desc")
 	ds_mov.SetInputParam("id_mov", id)
-	fmt.Println(ds_mov.Sql.Text())
+	//fmt.Println(ds_mov.Sql.Text())
 	err = ds_mov.Open()
 	if err != nil {
 		http.Error(w, "fab_mov_tar_"+prefix+":"+err.Error(), http.StatusInternalServerError)
@@ -488,6 +488,256 @@ func getMovDet(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(dados)
 	return
 }
+func getMovEnvio(w http.ResponseWriter, r *http.Request) {
+	botName := r.URL.Query().Get("bot")
+	if botName == "" {
+		http.Error(w, "Missing bot name", http.StatusBadRequest)
+		return
+	}
+	dbName := r.URL.Query().Get("db")
+	if dbName == "" {
+		http.Error(w, "Missing db name", http.StatusBadRequest)
+		return
+	}
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		http.Error(w, "Missing dtini", http.StatusBadRequest)
+		return
+	}
+
+	file, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	var config Config
+	err = json.Unmarshal(file, &config)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	Exists := false
+	url := ""
+	for _, db := range config.DBS {
+		if db.Name == dbName {
+			url = db.GetUrlOra()
+			Exists = true
+		}
+	}
+
+	if Exists == false {
+		http.Error(w, "Missing app/db name", http.StatusBadRequest)
+		return
+	}
+	conn, err := godata.NewConnectionOracle(url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer conn.Close()
+	ds_p := godata.NewDataSet(conn)
+	ds_p.Sql.Clear().
+		Add("select id, tabela, nome_servico").
+		Add("from fab_processo").
+		Add("where upper(NOME_EXE) = upper(:NOME_EXE)")
+	ds_p.SetInputParam("NOME_EXE", botName)
+	err = ds_p.Open()
+	if err != nil {
+		http.Error(w, "ds_p:"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	//id_proc:= ds_p.FieldByName("id").AsInt64()
+	prefix := ds_p.FieldByName("tabela").AsString()
+	ds_mov := godata.NewDataSet(conn)
+	ds_mov.Sql.Clear().
+		Add("select arquivo from fab_mov_art_" + prefix).
+		Add("where id = :id")
+	ds_mov.SetInputParam("id", id)
+	err = ds_mov.Open()
+	if err != nil {
+		http.Error(w, "fab_mov_tar_"+prefix+":"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	type Det struct {
+		Arquivo string `json:"arquivo"`
+	}
+	var dados Det
+	err = ds_mov.ToStruct(&dados)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(dados)
+	return
+}
+func getMovDetalhe(w http.ResponseWriter, r *http.Request) {
+	botName := r.URL.Query().Get("bot")
+	if botName == "" {
+		http.Error(w, "Missing bot name", http.StatusBadRequest)
+		return
+	}
+	dbName := r.URL.Query().Get("db")
+	if dbName == "" {
+		http.Error(w, "Missing db name", http.StatusBadRequest)
+		return
+	}
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		http.Error(w, "Missing dtini", http.StatusBadRequest)
+		return
+	}
+
+	file, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	var config Config
+	err = json.Unmarshal(file, &config)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	Exists := false
+	url := ""
+	for _, db := range config.DBS {
+		if db.Name == dbName {
+			url = db.GetUrlOra()
+			Exists = true
+		}
+	}
+
+	if Exists == false {
+		http.Error(w, "Missing app/db name", http.StatusBadRequest)
+		return
+	}
+	conn, err := godata.NewConnectionOracle(url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer conn.Close()
+	ds_p := godata.NewDataSet(conn)
+	ds_p.Sql.Clear().
+		Add("select id, tabela, nome_servico").
+		Add("from fab_processo").
+		Add("where upper(NOME_EXE) = upper(:NOME_EXE)")
+	ds_p.SetInputParam("NOME_EXE", botName)
+	err = ds_p.Open()
+	if err != nil {
+		http.Error(w, "ds_p:"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	//id_proc:= ds_p.FieldByName("id").AsInt64()
+	prefix := ds_p.FieldByName("tabela").AsString()
+	ds_mov := godata.NewDataSet(conn)
+	ds_mov.Sql.Clear().
+		Add("select id, id_mov_det_" + prefix + ", status_code, status_msg, url,").
+		Add("request, response, dtinc, userinc, dtalt, useralt").
+		Add("from fab_mov_det_http_" + prefix).
+		Add("where id_mov_det_" + prefix + " = :id_mov_det")
+	ds_mov.SetInputParam("id_mov_det", id)
+	err = ds_mov.Open()
+	if err != nil {
+		http.Error(w, "fab_mov_tar_"+prefix+":"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	type Det struct {
+		Request  string `json:"request"`
+		Response string `json:"response"`
+	}
+	var dados Det
+	err = ds_mov.ToStruct(&dados)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(dados)
+	return
+}
+func getMovRetorno(w http.ResponseWriter, r *http.Request) {
+	botName := r.URL.Query().Get("bot")
+	if botName == "" {
+		http.Error(w, "Missing bot name", http.StatusBadRequest)
+		return
+	}
+	dbName := r.URL.Query().Get("db")
+	if dbName == "" {
+		http.Error(w, "Missing db name", http.StatusBadRequest)
+		return
+	}
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		http.Error(w, "Missing dtini", http.StatusBadRequest)
+		return
+	}
+
+	file, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	var config Config
+	err = json.Unmarshal(file, &config)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	Exists := false
+	url := ""
+	for _, db := range config.DBS {
+		if db.Name == dbName {
+			url = db.GetUrlOra()
+			Exists = true
+		}
+	}
+
+	if Exists == false {
+		http.Error(w, "Missing app/db name", http.StatusBadRequest)
+		return
+	}
+	conn, err := godata.NewConnectionOracle(url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer conn.Close()
+	ds_p := godata.NewDataSet(conn)
+	ds_p.Sql.Clear().
+		Add("select id, tabela, nome_servico").
+		Add("from fab_processo").
+		Add("where upper(NOME_EXE) = upper(:NOME_EXE)")
+	ds_p.SetInputParam("NOME_EXE", botName)
+	err = ds_p.Open()
+	if err != nil {
+		http.Error(w, "ds_p:"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	//id_proc:= ds_p.FieldByName("id").AsInt64()
+	prefix := ds_p.FieldByName("tabela").AsString()
+	ds_mov := godata.NewDataSet(conn)
+	ds_mov.Sql.Clear().
+		Add("select arquivo from fab_mov_art_" + prefix).
+		Add("where id = :id")
+	ds_mov.SetInputParam("id", id)
+	err = ds_mov.Open()
+	if err != nil {
+		http.Error(w, "fab_mov_tar_"+prefix+":"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	type Det struct {
+		Arquivo string `json:"arquivo"`
+	}
+	var dados Det
+	err = ds_mov.ToStruct(&dados)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(dados)
+	return
+}
+
 func getLocalIPv4() (string, error) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
@@ -530,6 +780,10 @@ func main() {
 	router.HandleFunc("/botdbs", getBotDBs).Methods("GET")
 	router.HandleFunc("/movlist", getMovList).Methods("GET")
 	router.HandleFunc("/movdet", getMovDet).Methods("GET")
+	router.HandleFunc("/movenvio", getMovEnvio).Methods("GET")
+	router.HandleFunc("/movretorno", getMovRetorno).Methods("GET")
+	router.HandleFunc("/movdetalhe", getMovDetalhe).Methods("GET")
+
 	router.HandleFunc("/json", updateConfig).Methods("POST")
 
 	router.HandleFunc("/signin", signin).Methods("GET")
